@@ -1,3 +1,5 @@
+import { element } from "prop-types";
+
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
@@ -12,12 +14,37 @@ const getState = ({ getStore, getActions, setStore }) => {
 					background: "white",
 					initial: "white"
 				}
-			]
+			],
+			characters:[
+			],
+			planets:[
+			],
+			characterIndividual:[
+			],
+			imagenPeople:[
+			],
+			planetaIndividual:[
+			],
+			imagenPlanet:[
+			],
+			favorites:[
+			],
+
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
 			exampleFunction: () => {
 				getActions().changeColor(0, "green");
+			},
+			addFav: (item) => {
+				let arr = getStore().favorites
+				arr.push(item)
+				setStore({favorites:arr})
+			},
+			removeFav: (index) => {
+				let arr = getStore().favorites
+				let x = arr.filter((e,i) => i!= index)
+				setStore({favorites:x})
 			},
 			loadSomeData: () => {
 				/**
@@ -37,8 +64,56 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 				//reset the global store
 				setStore({ demo: demo });
+			},
+			getCharacters: () => {
+				fetch("https://www.swapi.tech/api/people/")
+				.then((Response)=>Response.json())
+				.then((data)=>{
+					console.log(data);
+					setStore({characters: data.results})
+				})
+			},
+			getPlanets: () => {
+				fetch("https://www.swapi.tech/api/planets/")
+				.then((Response)=>Response.json())
+				.then((data)=>{
+					setStore({planets: data.results})
+				})
+			},
+			informacionIndividualPeople: (id) => {
+				fetch("https://www.swapi.tech/api/people/" + id)
+				  .then((resp) => resp.json())
+				  .then((resp) =>
+					setStore({ characterIndividual: resp.result.properties })
+				  )
+				  .catch((err) => console.error(err));
+			},
+			imagenCharacter: (id)=>{
+				fetch("https://www.starwars-visualguide.com/assets/img/people/" + id +".jpg")
+				  .then((resp) => resp.json())
+				  .then((resp) =>
+					setStore({ imagenPeople: resp })
+				  )
+				  .catch((err) => console.error(err));
+			},
+			informacionIndividualPlaneta: (id) => {
+				fetch("https://www.swapi.tech/api/planets/" + id)
+				  .then((resp) => resp.json())
+				  .then((resp) =>
+					setStore({ planetaIndividual: resp.result.properties })
+				  )
+				  .catch((err) => console.error(err));
+			},
+			imagenPlaneta: (id)=>{
+				fetch("https://starwars-visualguide.com/assets/img/planets/" + id +".jpg")
+				  .then((resp) => resp.json())
+				  .then((resp) =>
+					setStore({ imagenPlanet: resp })
+				  )
+				  .catch((err) => console.error(err));
 			}
 		}
+		
 	};
 };
 

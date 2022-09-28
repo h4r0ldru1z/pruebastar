@@ -1,14 +1,34 @@
-import React from "react";
-
+import React, { useContext } from "react";
+import { Context } from "../store/appContext";
+import { Link } from "react-router-dom";
 export const Cards = (props) => {
-    return (
-    <div className="card" style={{maxWidth: 300}}>
-  <img src ={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfSPPj-fLFjLrjkfruw_bTkU3PH8aub0VZH4TLEHAA&s"} className="card-img-top" />
-  <div className="card-body">
-    <h5 className="card-title">Card title</h5>
-    <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-    <a href="#" className="btn btn-primary">Go somewhere</a>
-  </div>
-</div>
-    );
-}
+  let links =
+    props.type === "planets"
+      ? `/planetView/${props.uid}`
+      : `/CharacterView/${props.uid}`;
+  const { store, actions } = useContext(Context);
+  return (
+    <div className="card mx-5 col-3 bg-dark">
+      <img
+        src={`https://starwars-visualguide.com/assets/img/characters/${props.uid}.jpg`}
+        className="card-img-top"
+      />
+      <h5 className="card-title text-light text-center mt-2">{props.name}</h5>
+      <div className="card-body container-flex">
+        <div className="float-start">
+          <Link type="button" className="btn btn-light" to={links}>
+            See the character info!
+          </Link>
+        </div>
+        <div className="float-end">
+          <button
+            type="button"
+            onClick={() => actions.addFav({ id: props.uid, name: props.name })}
+          >
+            <i className="fa-solid fa-heart" />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
